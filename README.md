@@ -64,7 +64,7 @@ C'est là que sont stockés les modèles
 
     models.py : C'est ici que l'on définit l'architecture de notre NN.
     model_2024_08.pkl : Une version sauvegardée de notre modèle. 
-    preprocessor.pkl : 
+    preprocessor.pkl : le preparateur de données
 
 modules/ 
 
