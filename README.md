@@ -6,7 +6,7 @@ Installation :
 
 ou (recommandé MacOS Sequoia)
 
-`conda create -n myEnv python=3.8`
+`conda create -n myEnv python=3.9`
 puis
 `conda activate myEnv`
 
