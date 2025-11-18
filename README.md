@@ -1,9 +1,10 @@
 # Bienvenue dans ce projet d'IA
 
-Installation : 
+Installation :
 
-    python -m venv .venv
+    `python -m venv .venv`
 
+    ou `conda create -n myEnv python=3.8` puis `conda activate myEnv` (recommandé MacOS Sequoia)
 
 Activation :
 
@@ -20,18 +21,17 @@ macOS / Linux :
     source .venv/bin/activate
 
 
-Installation des dépendances : 
+Installation des dépendances :
 
     pip install -r requirements.txt
 
-
-# Le modèle d'IA
+## Le modèle d'IA
 
 Nous avons ici un réseau de neurones (NN) avec :
 2 couches "denses"
 1 couche de prédiction
 
-# Architecture du projet
+## Architecture du projet
 
     .
     ├── data/
@@ -50,23 +50,22 @@ Nous avons ici un réseau de neurones (NN) avec :
     ├── main.py
     └── requirements.txt
 
-
-data/ 
+data/
 
 C'est là que sont stockées les données.
 
     df_new.csv : Les données fraîches du jour, prêtes à être dévorées par notre IA.
     df_old.csv : Les anciennes données ayant servis à l'apprentissage initial du modèle
 
-models/ 
+models/
 
 C'est là que sont stockés les modèles
 
     models.py : C'est ici que l'on définit l'architecture de notre NN.
-    model_2024_08.pkl : Une version sauvegardée de notre modèle. 
+    model_2024_08.pkl : Une version sauvegardée de notre modèle.
     preprocessor.pkl : le preparateur de données
 
-modules/ 
+modules/
 
 C'est là que le code python se découpe en modules ayant chaque une tâche définie
 
