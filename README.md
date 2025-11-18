@@ -10,6 +10,8 @@ ou (recommandé MacOS Sequoia)
 puis
 `conda activate myEnv`
 
+(source : [How to Install TensorFlow in Anaconda](https://www.geeksforgeeks.org/deep-learning/how-to-install-tensorflow-in-anaconda/))
+
 Activation :
 
 Windows (PowerShell) :
