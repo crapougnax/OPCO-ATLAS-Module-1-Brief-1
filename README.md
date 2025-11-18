@@ -2,9 +2,13 @@
 
 Installation :
 
-    `python -m venv .venv`
+`python -m venv .venv`
 
-    ou `conda create -n myEnv python=3.8` puis `conda activate myEnv` (recommandé MacOS Sequoia)
+ou (recommandé MacOS Sequoia)
+
+`conda create -n myEnv python=3.8`
+puis
+`conda activate myEnv`
 
 Activation :
 
