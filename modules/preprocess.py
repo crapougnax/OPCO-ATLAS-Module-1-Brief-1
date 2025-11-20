@@ -37,5 +37,6 @@ def preprocessing(df):
     X = df.drop(columns=["nom", "prenom", "montant_pret"])
     y = df["montant_pret"]
 
-    X_processed = preprocessor.fit_transform(X)
-    return X_processed, y, preprocessor
+    X2 = preprocessor.fit_transform(X)
+
+    return X2, y, preprocessor
