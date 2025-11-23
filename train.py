@@ -7,35 +7,46 @@ import pandas as pd
 import joblib
 from os.path import join as join
 
-EXP_NAME = "Simplon"
-ARTIFACT_PATH = "./mlruns/simplon"
-
-# if mlflow.get_experiment_by_name(EXP_NAME) is None:
-#     mlflow.create_experiment(name=EXP_NAME, artifact_location=ARTIFACT_PATH)
-# mlflow.set_experiment(EXP_NAME)
-
 with mlflow.start_run():
+    mlflow.set_tracking_uri("http://localhost:5555")
+
     # Chargement des datasets
     df_old = pd.read_csv(join("data", "df_old.csv"))
     df_new = pd.read_csv(join("data", "df_new.csv"))
+
+    # Definition des paramètres
+    test_size = 0.10
+    random_state = 84
+    dataset_label = "combined"
+
+    model_name = (
+        "v2025_11_"
+        + dataset_label
+        + "_ts"
+        + str(int(test_size * 100))
+        + "_rs"
+        + str(random_state)
+    )
 
     ds = pd.concat([df_old, df_new])
 
     # Create a Dataset object
     dataset = mlflow.data.from_pandas(ds)
-    mlflow.log_input(dataset, context="combined")
+    mlflow.log_input(dataset, context=dataset_label)
 
     # preprocesser les data
     X, y, _ = preprocessing(ds)
 
     # split data in train and test dataset
-    X_train, X_test, y_train, y_test = split(X, y)
+    X_train, X_test, y_train, y_test = split(
+        X, y, test_size=test_size, random_state=random_state
+    )
 
     # # create a new model
     model = create_nn_model(X_train.shape[1])
 
     # # entraîner le modèle
-    model, _ = train_model(model, X_train, y_train, X_val=X_test, y_val=y_test)
+    model, hist2 = train_model(model, X_train, y_train, X_val=X_test, y_val=y_test)
 
     y_pred = model_predict(model, X_train)
 
@@ -45,7 +56,16 @@ with mlflow.start_run():
     mlflow.log_metric("mae", perf["MAE"])
     mlflow.log_metric("r2", perf["R²"])
 
-    mlflow.sklearn.log_model(model, name="v2025_11_combined", input_example=X_train)
+    mlflow.log_param("test_size", test_size)
+    mlflow.log_param("random_state", random_state)
+
+    mlflow.sklearn.log_model(
+        model,
+        name=model_name,
+        input_example=X_train,
+    )
 
     # # sauvegarder le modèle
-    joblib.dump(model, join("models", "model_2025_11_combined.pkl"))
+    joblib.dump(model, join("models", model_name))
+
+    draw_loss(hist2)
