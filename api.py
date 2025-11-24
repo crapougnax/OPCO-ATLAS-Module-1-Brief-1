@@ -1,10 +1,10 @@
 from fastapi import FastAPI, HTTPException
 from loguru import logger
 from pydantic import BaseModel
-import torch
 import os
 from models.models import model_predict
-
+import joblib
+from os.path import join as join
 
 class Texte(BaseModel):
     texte: str
@@ -19,9 +19,9 @@ app = FastAPI()
 
 
 @app.post("/predict/")
-async def predict(payload: Texte):
-    logger.info(f"Received text: {payload.texte}")
-
+async def predict(payload):
+    #logger.info(f"Received data: {payload}")
+    print(payload)
     try:
         pred = model_predict(model, payload)
 
