@@ -1,6 +1,12 @@
 import streamlit as st
 import requests
 from loguru import logger
+import json
+
+def encoder(obj):
+    if isinstance(obj, set):
+        return list(obj)
+    return obj
 
 st.title("Simuler votre montant de prêt")
 
@@ -12,23 +18,38 @@ st.radio("Licence sportive", ["oui","non"], captions=["Oui", "Non"], key="sport_
 st.selectbox("Niveau d'études", ["aucun", "bac", "bac+2","master", "doctorat"], key="niveau_etude")
 st.selectbox("Région", ["Provence-Alpes-Côte d’Azur", "Île de France"], key="region")
 st.radio("Fumeur", ["oui","non"], captions=["Oui", "Non"], key="smoker")
-st.radio("Nationalité Française", ["oui","non"], captions=["Oui", "Non"], key="nationalité_francaise")
+st.radio("Nationalité Française", ["oui","non"], captions=["Oui", "Non"], key="nationalite")
 st.number_input("Revenu mensuel", key="revenu_estime_mois")
 
 if st.button("Simuler"):
 
     if st.session_state:
         logger.info(f"Données à analyser: {st.session_state}")
+        
+        gfg = [('age', st.session_state.age), ('taille', st.session_state.taille), ('poids', st.session_state.poids)]
+        
+        json_data = dict(gfg)
+
+        json_string = json.dumps(json_data, default=encoder)
+
+        data={
+            "age": st.session_state.age,
+            "taille": st.session_state.taille,
+            "poids": st.session_state.poids,
+            "sexe": st.session_state.sexe,
+            "sport_licence": st.session_state.sport_licence,
+            "niveau_etude": st.session_state.niveau_etude,
+            "region": st.session_state.region,
+            "smoker": st.session_state.smoker,
+            "nationalite": st.session_state.nationalite,
+            "revenu_estime_mois": st.session_state.revenu_estime_mois
+        }
+        
+        print(json_string)
+        
         try:
-            print(st.session_state)
             response = requests.post(
-                "http://orignax.lp:9000/predict/", json={
-                    "age": st.session_state.age,
-                    "taille": st.session_state.taille,
-                    "poids": st.session_state.poids,
-                    "sexe": st.session_state.sexe,
-                    "sport_licence": st.session_state.sport_licence
-                }
+                "http://orignax.lp:9000/predict/", json=gfg
             )
             # Lève une exception pour les codes d'erreur HTTP (4xx ou 5xx)
             response.raise_for_status()
@@ -37,4 +58,6 @@ if st.button("Simuler"):
             print(payload)
 
         except requests.exceptions.RequestException as e:
+            print(e)
             st.error(f"Erreur lors de la requête : {e}")
+            
